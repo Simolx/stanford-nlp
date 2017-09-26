@@ -4,6 +4,7 @@ version '1.0-SNAPSHOT'
 apply plugin: 'java'
 
 dependencies {
+    compile group: 'com.google.guava', name: 'guava', version: '23.0'
     compile group: 'edu.stanford.nlp', name: 'stanford-corenlp', version: "$nlpversion"
     compile group: 'edu.stanford.nlp', name: 'stanford-corenlp', version: "$nlpversion", classifier: 'models'
     compile group: 'edu.stanford.nlp', name: 'stanford-corenlp', version: "$nlpversion", classifier: 'models-chinese'

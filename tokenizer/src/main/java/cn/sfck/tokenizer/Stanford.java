@@ -15,22 +15,39 @@ public class Stanford {
         stanford.tokenizerChinese();
         stanford.tokenizerEnglist();
     }
+
+    private String getTokenizerString() {
+      List<String> sentenceList = new ArrayList<String>();
+      
+    }
+
     public void tokenizerEnglist() {
         Properties props = new Properties();
 //        props.setProperty("annotators", "tokenize,ssplit,pos,lemma,parse,natlog");
         props.setProperty("annotators", "tokenize, ssplit");
         StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
-        String text = "All that remains for me to do is to say good-bye.";
-        Annotation document = new Annotation(text);
-        pipeline.annotate(document);
 
-        List<CoreMap> sentences = document.get(CoreAnnotations.SentencesAnnotation.class);
-        for(CoreMap sentence: sentences) {
-            for(CoreLabel token: sentence.get(CoreAnnotations.TokensAnnotation.class)) {
-                String word = token.get(CoreAnnotations.TextAnnotation.class);
-                System.out.println(word);
+        String filename = "";
+        Path path = Paths.get(filename);
+        File output = new File("");
+        try(BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+          while(true) {
+            String text = reader.readLine();
+            if (text == null) {
+              break;
             }
-            System.out.println("======================");
+            Annotation document = new Annotation(text);
+            pipeline.annotate(document);
+            List<String> sentenceList = new ArrayList<String>();
+            List<CoreMap> sentences = document.get(CoreAnnotations.SentencesAnnotation.class);
+            for(CoreMap sentence: sentences) {
+                for(CoreLabel token: sentence.get(CoreAnnotations.TokensAnnotation.class)) {
+                    String word = token.get(CoreAnnotations.TextAnnotation.class);
+                    sentenceList.append(word);
+                }
+            }
+            Files.append(StringUtils.join(sentenceList, " "), output, Charsets.UTF_8);
+          }
         }
     }
     public void tokenizerChinese() {
