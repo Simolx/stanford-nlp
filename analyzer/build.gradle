@@ -1,0 +1,14 @@
+group 'cn.sfck'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+
+
+dependencies {
+    compile group: 'edu.stanford.nlp', name: 'stanford-corenlp', version: "$nlpversion"
+    compile group: 'edu.stanford.nlp', name: 'stanford-corenlp', version: "$nlpversion", classifier: 'models'
+    compile group: 'edu.stanford.nlp', name: 'stanford-corenlp', version: "$nlpversion", classifier: 'models-chinese'
+    compile group: 'edu.stanford.nlp', name: 'stanford-corenlp', version: "$nlpversion", classifier: 'models-english'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
