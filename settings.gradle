@@ -1,4 +1,3 @@
 rootProject.name = 'stanford-nlp'
-include 'analyzer'
-findProject(':analyzer')?.name = 'tokenizer'
+include 'tokenizer'
 

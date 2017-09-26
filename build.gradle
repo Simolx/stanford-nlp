@@ -6,9 +6,6 @@ apply plugin: 'java'
 allprojects {
     sourceCompatibility = 1.8
     repositories {
-        maven {
-            url "http://localhost:18081/repository/maven-public/"
-        }
         mavenCentral()
     }
     ext {
