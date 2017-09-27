@@ -1,53 +1,71 @@
 package cn.sfck.tokenizer;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.util.CoreMap;
+import org.apache.commons.lang3.StringUtils;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
 
 public class Stanford {
     public static void main(String[] args) {
         Stanford stanford = new Stanford();
         stanford.tokenizerChinese();
-        stanford.tokenizerEnglist();
+        stanford.tokenizerEnglish();
     }
 
-    private String getTokenizerString() {
+    private String getTokenizerString(StanfordCoreNLP pipeline, String text) {
+        return this.getTokenizerString(pipeline, text, " ");
+    }
+
+    private String getTokenizerString(StanfordCoreNLP pipeline, String text, String spliter) {
+      Annotation document = new Annotation(text);
+      pipeline.annotate(document);
       List<String> sentenceList = new ArrayList<String>();
+      List<CoreMap> sentences = document.get(CoreAnnotations.SentencesAnnotation.class);
+      for(CoreMap sentence: sentences) {
+          for(CoreLabel token: sentence.get(CoreAnnotations.TokensAnnotation.class)) {
+              String word = token.get(CoreAnnotations.TextAnnotation.class);
+              sentenceList.add(word);
+          }
+      }
+      return StringUtils.join(sentenceList, spliter);
       
     }
 
-    public void tokenizerEnglist() {
+    public void tokenizerEnglish() {
         Properties props = new Properties();
 //        props.setProperty("annotators", "tokenize,ssplit,pos,lemma,parse,natlog");
         props.setProperty("annotators", "tokenize, ssplit");
         StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
 
         String filename = "";
-        Path path = Paths.get(filename);
+        File input = new File("");
         File output = new File("");
-        try(BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+        try(BufferedReader reader = Files.newReader(input, Charsets.UTF_8)) {
+            BufferedWriter writer = Files.newWriter(output, Charsets.UTF_8);
           while(true) {
             String text = reader.readLine();
             if (text == null) {
               break;
             }
-            Annotation document = new Annotation(text);
-            pipeline.annotate(document);
-            List<String> sentenceList = new ArrayList<String>();
-            List<CoreMap> sentences = document.get(CoreAnnotations.SentencesAnnotation.class);
-            for(CoreMap sentence: sentences) {
-                for(CoreLabel token: sentence.get(CoreAnnotations.TokensAnnotation.class)) {
-                    String word = token.get(CoreAnnotations.TextAnnotation.class);
-                    sentenceList.append(word);
-                }
-            }
-            Files.append(StringUtils.join(sentenceList, " "), output, Charsets.UTF_8);
+            writer.write(this.getTokenizerString(pipeline, text));
           }
+          reader.close();
+          writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
     public void tokenizerChinese() {
