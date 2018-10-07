@@ -32,7 +32,7 @@ public class Stanford {
     private String getTokenizerString(StanfordCoreNLP pipeline, String text, String spliter) {
       Annotation document = new Annotation(text);
       pipeline.annotate(document);
-      List<String> sentenceList = new ArrayList<String>();
+      List<String> sentenceList = new ArrayList<>();
       List<CoreMap> sentences = document.get(CoreAnnotations.SentencesAnnotation.class);
       for(CoreMap sentence: sentences) {
           for(CoreLabel token: sentence.get(CoreAnnotations.TokensAnnotation.class)) {
@@ -50,7 +50,6 @@ public class Stanford {
         props.setProperty("annotators", "tokenize, ssplit");
         StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
 
-        String filename = "";
         File input = new File("");
         File output = new File("");
         try(BufferedReader reader = Files.newReader(input, Charsets.UTF_8)) {
